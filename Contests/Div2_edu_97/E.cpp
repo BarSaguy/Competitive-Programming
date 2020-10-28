@@ -10,58 +10,55 @@ using namespace std;
 vi a;
 vi b;
 
-const int INF = 1e18+1;
+const int INF = 1e18+2;
 
-int dp(int s, int e, int min_val, int max_val){
-    int ans = e-s;
-    for(int i=s; i<e-1; i++){
-        if(a[i] > a[i+1]){
-            ans = min(ans, dp(s, i, min_val, a[i]) + dp(i, e, a[i], max_val));
+int lis(int s, int e){
+    int n = e-s+1;
+    vi d(n+1, INF);
+    d[0] = -INF;
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        int j = upper_bound(d.begin(), d.end(), a[s+i]) - d.begin();
+        if(j == 1 && i != 0)
+            continue;
+        if (d[j-1] <= a[s+i] && a[s+i] < d[j]){
+            d[j] = a[s+i];
+            ans = j;
         }
     }
+
+    // int ans = 0;
+    // for (int i = 0; i <= n; i++) {
+    //    if (d[i] < INF)
+    //        ans = i;
+    //}
     return ans;
 }
 
 void solve(){
     int n, k; cin >> n >> k;
-    a.resize(n);
+    a.resize(n+2);
+    a[0] = -INF+1;
+    a[n+1] = INF-1;
     for(int i=0; i<n; i++){
-        cin >> a[i];
+        cin >> a[i+1];
+        a[i+1] = a[i+1] - i;
     }
-    int c;
+    b.resize(k+2);
+    b[0] = 0; b[k+1] = n+1;
     for(int i=0; i<k; i++){
-        cin >> c;
-        b.push_back(c);
-    }
-    int ans;
-    if(k==0){
-        ans = dp(0, n, -INF, INF);
-        cout << ans << endl;
-    }
-    else{
-        ans = dp(0, b[0], -INF,a[b[0]]);
-        int sum = ans;
-        if(ans == -1){
+        cin >> b[i+1];
+        if(a[b[i+1]] - a[b[i]] < 0){
             cout << -1 << endl;
             return;
         }
-        for(int i=1; i<k; i++){
-            ans = dp(b[i-1]+1, b[i], a[b[i-1]],a[b[i]]);
-            if(ans == -1){
-                cout << -1 << endl;
-                return;
-            }
-            sum += ans;
-        }
-        ans = dp(b[k-1]+1, n, a[b[k-1]], INF);
-        if(ans == -1){
-            cout << -1 << endl;
-            return;
-        }
-        sum += ans;
-        cout << sum << endl;
     }
-    
+    int sum = 0;
+    for(int i=0; i<k+1; i++){
+        int ans = lis(b[i], b[i+1]);
+        sum += b[i+1] - b[i] + 1 - ans;
+    }
+    cout << sum << endl;
 }
 
 int32_t main(){
