@@ -26,8 +26,7 @@ struct SEG{
         i += sz;
         a[i] = x;
         for(i/=2;i;i/=2){
-            a[i] = min(a[2*i],a[2*i+1]);
-            
+            a[i] = min(a[2*i],a[2*i+1]);  
         }
     }
     int query(int l, int r){
