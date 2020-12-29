@@ -16,15 +16,19 @@ using namespace std;
 
 const int INF = 1e18;
 
+
 void solve(){
-	
-	
+    int n; cin >> n;
+    int ans;
+    if(n%2) ans = (n/2+2) * (n/2+1)*2;
+    else ans = (n/2+1) * (n/2+1);
+    cout << ans << endl;
 }
 
 int32_t main(){
-	ios_base::sync_with_stdio(false);
-	int t=1;
-	//cin >> t;
-	while(t--) solve();
-	return 0;
+    ios_base::sync_with_stdio(false);
+    int t=1;
+    //cin >> t;
+    for(int i=0; i<t; i++) solve();
+    return 0;
 }
